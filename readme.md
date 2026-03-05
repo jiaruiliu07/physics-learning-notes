@@ -2,7 +2,7 @@
 
 A structured, long-term repository tracking my self-study in theoretical and computational physics — from undergraduate foundations through graduate-level core subjects. It contains LaTeX notes and derivations organized by textbook, alongside C++ implementations of numerical methods and physics simulations.
 
-This is a working document, not a finished product. Some chapters are thorough; others are stubs. I'm building it in public partly to keep myself honest and partly because I hope it becomes useful to other students eventually.
+This is a working document, not a finished product. I will NOT version it or do advanced project management, but I'll do my best to keep the repo clean and readable. Some chapters are thorough; others are stubs. I'm building it in public partly to keep myself honest and motivated partly because I hope it becomes useful to other students eventually.
 
 ## Who I am and why this exists
 
@@ -18,6 +18,7 @@ physics-learning-notes/
 ├── notes/                         # LaTeX notes, organized by subject and textbook
 │   ├── shared/                    # Shared preamble, macros, minted config
 │   ├── classical-mechanics/
+│   │   ├── taylor/ 
 │   │   ├── goldstein/             # Each book has its own main.tex
 │   │   └── topic-notes/           # Standalone summaries not tied to a book
 │   ├── electrodynamics/
@@ -30,6 +31,8 @@ physics-learning-notes/
 │   │   ├── schroeder/
 │   │   └── pathria/
 │   └── mathematical-methods/
+│       ├── Boas/
+│       └── arfken-weber-harris/
 │
 ├── code/                          # C++ code (and some Python)
 │   ├── learning/                  # Exercises from CS106L, LearnCpp, Gottschling
@@ -79,7 +82,7 @@ These timelines are approximate. Real life — coursework, research, transfer lo
 
 ### Theory textbooks (in rough order of study)
 
-| Subject | Undergrad | Graduate |
+| Subject | Beginner | Intermediate |
 |---|---|---|
 | Classical Mechanics | Taylor, *Classical Mechanics* | Goldstein, Poole & Safko, *Classical Mechanics* |
 | Electrodynamics | Griffiths, *Intro to Electrodynamics* | Jackson, *Classical Electrodynamics* |
@@ -99,6 +102,7 @@ These timelines are approximate. Real life — coursework, research, transfer lo
 You're welcome to read, reference, or adapt anything here. A few notes:
 
 - **Notes may contain errors.** These are study notes, not textbooks. If you find a mistake, I'd genuinely appreciate an issue or pull request.
+- **The textbook list is not exhaustive.** I may add references to random textbooks not on the table above (*Feynman Lectures*, Walter Greiner's texts) if I find them helpful.
 - **The C++ code is learning-stage work.** Especially in `learning/` and early projects. It will get better over time. Don't use `solvers/` in anything important without checking it yourself.
 - **LaTeX compilation** requires `latexmk` and a TeX distribution with `minted` support (which requires Python's `Pygments`). Each book compiles from its own directory — see the repo skeleton docs for details.
 - **C++ builds** use CMake 3.20+ and a C++17-compatible compiler. Individual projects can also be compiled directly with `g++` or `clang++`.
