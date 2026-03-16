@@ -1,15 +1,34 @@
 %! Author = Jiarui Liu
 %! Date = 3/5/2026
 
-% Preamble
-\documentclass[11pt]{article}
+\documentclass{article}
+\input{preamble.tex}
 
-% Packages
-\usepackage{amsmath}
-
-% Document
 \begin{document}
 
+	% Physics note color palette
+	\definecolor{physgreen}{RGB}{34,139,34}
+	\definecolor{physpurple}{RGB}{128,0,128}
+	\definecolor{physblue}{RGB}{30,144,255}
+	\definecolor{physorange}{RGB}{255,140,0}
+	\definecolor{physgray}{RGB}{80,80,80}
 
+	\title{{Classical Mechanics}\\{\normalsize{Notes on the Taylor textbook}}}
+	\author{Jiarui Liu}
+	\affiliation{
+	Student at the University of Southern California\\
+	\href{https://conversionindex.org}{Website}\\
+	\href{https://www.linkedin.com/in/jiarui-liu-994007294/}{LinkedIn}\\
+	\href{https://github.com/jiaruiliu07}{GitHub}\\
+	}
+	\emailAdd{jliu1978@usc.edu}
+	\maketitle
+	\newpage
+	\pagestyle{fancynotes}
+
+    \part{Newton's Laws of Motion}
+    \include{chapters/chapter_01.tex}
+
+    \part{Projectiles and Charged Particles}
 
 \end{document}
