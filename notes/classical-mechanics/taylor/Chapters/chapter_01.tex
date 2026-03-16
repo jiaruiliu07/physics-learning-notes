@@ -1,0 +1,280 @@
+\documentclass{article}
+
+\input{../shared/preamble.tex}
+
+\begin{document}
+
+\section{Classical Mechanics: Introduction}
+Mechanics is the study of \textit{how things move}. Until the beginning of the twentieth century, it seemed that it was the only mechanics correctly describing all possible motion. This, obviously, was changed after the introduction of relativity, and quantum theory, leading to relativistic and quantum mechanics. There will be an introduction to relativity in the optional Chapter 15. Quantum mechanics, however, requires a different book altogether (maybe Griffiths or Sakurai). At the level of this book, the Lagrangian approach will be shown. It has significant advantages over the Newtonian, and we shall be using the Lagrangian formulation repeatedly starting Chapter 7.
+
+\section{Space and Time}
+\textit{Note: this part of the notes are adapted, in part, from the Spring 2026 University of Southern California Course PHYS-161: Advanced Topics in Physics I. The original content is developed as an experimental course by Prof. Scott MacDonald, Assistant Professor of the USC Department of Physics and Astronomy.}
+
+We will start with notation. Vectors will be noted as $\overrightarrow{A}$ or $\mathbf{A}$, with its magnitude $\vqty{\overrightarrow{A}}$ or $\mathrm{A}$. For the direction of the vector we wil denote as the unit vector $\mathbf{\hat{A}}$.
+
+	\vspace{1\baselineskip}
+	In Cartesian coordinates this course will prefer $\{\hat{\mathbf{x}}, \hat{\mathbf{y}}, \hat{\mathbf{z}}\}$. But there is a better and more general way to note this:
+	\begin{equation}
+	  \{\hat{\mathbf{e}}_1,\hat{\mathbf{e}}_2,\hat{\mathbf{e}}_3\}.
+	\end{equation}
+
+	This extends to the claim:
+	\begin{claim}
+		Any arbitrary vector $\hat{\mathbf{A}}$ can be expressed as a linear combination of the basis vectors $\left\{ \hat{e_{i}} \right\} $.
+	\end{claim}
+
+	\vspace{1\baselineskip}
+	\textbf{Vector addition.} Geometrically we define the diagonal of the parallelogram formed by the two vectors to be added. We also define multiplication by a scalar:
+	\begin{definition}
+	  Let $\alpha \in \mathbb{R}$ and $\hat{\mathbf{e}}_{i}$ as the basis vectors. Define $\alpha \mathbf{e}^{i}$ by:
+	  \begin{equation}
+		\vqty{\alpha \hat{\mathbf{e}}_{i}} = \vqty{\alpha}.
+	  \end{equation}
+
+	  If $\alpha>0$ the result is parallel to the original vector, if $\alpha<0$ is antiparallel to the original vector, if $\alpha=0$ the result is a zero vector.
+	\end{definition}
+	
+	We also define, formally, vector addition as the diagonal of the parallelogram formed by the two vector components. This is important because we can now express any vector using these three base vectors:
+	\begin{equation}
+	  \mathbf{A} = A^{1}\hat{\mathbf{e}}_1 + A^{2}\hat{\mathbf{e}}_2 + A^{3}\hat{\mathbf{e}}_3.
+	\end{equation}
+
+	Where the components of $\mathbf{A}$ are $\{A^{1},A^{2},A^{3}\}$, and they can be zero or nonzero. Here the components are in superscript because in abstract algebra (and by extension four-dimensional space), these will represent component vectors. The magnitude of $\mathbf{A}$ is given by
+	\begin{equation}
+	  \vqty{\mathbf{A}} \equiv A = \sqrt{\left( A^{1} \right)^{2} + \left( A^{2} \right)^{2} + \left( A^{3} \right)^{2}}.
+	\end{equation}
+
+	We can now write, for two arbitrary vectors $\mathbf{A}$ and $\mathbf{B}$, and scalars, $\alpha$ and $\beta$, we can write the following:
+	\begin{definition}
+		Linear combinations:
+		\begin{equation}
+		  \begin{aligned}
+		  \alpha \mathbf{A} + \beta \mathbf{B} = (\alpha A^{1} + \beta B^{1})\hat{\mathbf{e}}_1 + (\alpha A^{2} + \beta B^{2})\hat{\mathbf{e}}_2 + (\alpha A^{3} + \beta B^{3})\hat{\mathbf{e}}_3. \\
+		  \end{aligned}
+		\end{equation}
+
+		*Note that we do not need to provide definitions for subtraction because $\mathbf{A}-\mathbf{B} = \mathbf{A} + (-\mathbf{B})$. There is, though, a useful way of drawing the geometric- the final vector minus the initial vector, linking the tips of $\mathbf{A}$ and $\mathbf{B}$.
+	\end{definition}
+
+	This sounds like a mouthful and is complicated to write. Usually we write out the sigma in a compact form, with $i$ from $1$ through $3$, but it is still too difficult. Note, though, that $i$ is a \textit{dummy variable}, meaning that within the summation the variables can be reassigned for other letters. They are essentially placeholders for numbers, so in any sum we can freely change the letter $i$. But, if the variables are not summed (when they are \textit{free variables}), they are not interchangeable. So. with that in mind, we introduce \textbf{The Einstein Summation Convention.} We are writing the following:
+	\begin{claim}
+		We write the vector $\mathbf{A}$ as:
+		\begin{equation}
+		  \mathbf{A} = A^{1}\hat{\mathbf{e}}_1 + A^{2}\hat{\mathbf{e}}_2 + A^{3}\hat{\mathbf{e}}_3 = \sum_{i=1}^3 A^{i}\hat{\mathbf{e}}_{i} \equiv A^{i}\hat{\mathbf{e}}_{i}.
+		\end{equation}
+	\end{claim}
+
+	Essentially we omit the sigma. Is should be one superscript and one subscript, however in Euclidean space ($\mathbb{E}^{3}$) this does not matter; thus we could write $A_{i}\hat{\mathbf{e}}_{i}$. However in the Minkowski space this is important. Now we introduce an example:
+	\begin{example}
+		Write the following using the summation convention:
+		\begin{enumerate}
+			\item {$\mathbf{A} \pm \mathbf{B}$,}
+			\item {$\alpha \mathbf{A}$.}
+		\end{enumerate}
+
+		\vspace{1\baselineskip}
+		\textbf{Solution.} (a)The first one is easily deducted:
+		\begin{equation}
+		  \alpha \mathbf{A} + \beta \mathbf{B} = (\alpha A^{1} + \beta B^{1})\hat{\mathbf{e}}_1 + (\alpha A^{2} + \beta B^{2})\hat{\mathbf{e}}_2 + (\alpha A^{3} + \beta B^{3})\hat{\mathbf{e}}_3
+		\end{equation}
+
+		Writing out the summation and dropping the sigma:
+		\begin{equation}
+		  \mathbf{A} \pm \mathbf{B} = (A^{i}\pm B^{i})\hat{\mathbf{e}}_{i}.
+		\end{equation}
+
+		(b) the second one we already did:
+		\begin{equation}
+		  \alpha \mathbf{A} = \alpha A^{i}\hat{\mathbf{e}}_{i}.
+		\end{equation}
+	\end{example}
+
+	Now an exercise question:
+	\begin{exercise}
+		Write $A$ and $\hat{\mathbf{A}}$ using the summation convention. 
+		
+		\vspace{1\baselineskip}
+		\textbf{Solution.} We first write out the intermediate equation:
+		\begin{equation}
+		  A = \sqrt{\left( A^{1} \right)^{2} + \left( A^{2} \right)^{2} + \left( A^{3} \right)^{2}},
+		\end{equation}
+
+		and it would change into (for clarity we don't put extra superscripts):
+		\begin{equation} \label{eq0101}
+		  A = \sqrt{A^{i}A^{i}}.
+		\end{equation}
+
+		And the unit vector $\hat{\mathbf{A}}$ would be easy:
+		\begin{equation}
+		  \hat{\mathbf{A}} = \frac{A^{i}\hat{\mathbf{e}}_{i}}{\sqrt{A^{i}A^{i}}}.
+		\end{equation}
+	\end{exercise}
+
+	\textbf{Scalar products / Dot products.} We define an operation (the "product") that multiplies vectors and gives scalars. This is noticed as $\mathbf{A} \cdot \mathbf{B}$. It is defined as:
+	\begin{definition}
+		The dot product is defined as:
+		\begin{equation}
+		  \mathbf{A} \cdot \mathbf{B} = AB\cos \theta,
+		\end{equation}
+		where $\theta$ is the smallest angle between $A$ and $B$. Note that it is symmetric and communicative, where $\mathbf{A} \cdot \mathbf{B} = \mathbf{B} \cdot \mathbf{A}$.
+	\end{definition}
+
+	This introduces us to the Kronecker Delta:
+	\begin{equation}
+	  \hat{\mathbf{e}}_{i} \cdot \hat{\mathbf{e}}_{j} = \delta_{ij},
+	\end{equation}
+	
+	where the delta is a compact form of the identity matrix.
+	\begin{equation}
+	  \delta_{ij} = \begin{cases} 1, \quad \text{if} \; i=j, \\[2mm] 0 \quad \text{if} \; i \neq j.  \end{cases}
+	\end{equation}
+
+	This means we have an orthonormal basis. Now we prove that $\mathbf{A} \cdot \mathbf{B} = A^{i}B^{i}$. 
+	\begin{proof}
+		We use the Kronecker Delta:
+		\begin{equation}
+		  \begin{aligned}
+		  \mathbf{A} \cdot \mathbf{B} &= (A^{i}\hat{\mathbf{e}}_{i}) \cdot (B^{j}\hat{\mathbf{e}}_{j}) = A^{i}B^{j}\delta_{ij} \\[2mm]
+		  &= \sum_{i=1}^{3} \sum_{j=1}{3} A^{i}B^{j}\delta_{ij} \\[2mm]
+		  &= A^{i}B^{i}.
+		  \end{aligned} 
+		\end{equation}
+	\end{proof}
+
+	Now we go for an exercise:
+	\begin{exercise}
+		Show that:
+		\begin{enumerate}
+			\item {$\mathbf{A} \cdot \mathbf{A} = A^{i}A^{i} = A^{2},$}
+			\item {$\hat{\mathbf{e}}_{i} \cdot \mathbf{A} = A^{i}.$}
+		\end{enumerate}
+
+		\vspace{1\baselineskip}
+		\textbf{Solution.} (a) For the first equation, we simply plug in $\mathbf{A}$ for the general definition above and have:
+		\begin{equation}
+		  \mathbf{A} \cdot \mathbf{A} = A^{i}A^{i}.
+		\end{equation}
+
+		And, because we know, from Equation \ref{eq0101},
+		\begin{equation}
+		  A = \sqrt{A^{i}A^{i}} \quad \Rightarrow \quad A^{2} = A^{i}A^{i},
+		\end{equation}
+
+		we can prove the original equation.
+
+		\vspace{1\baselineskip}
+		(b) We expand the equation:
+		\begin{equation}
+		  \hat{\mathbf{e}}_{i} \cdot \mathbf{A} = \hat{\mathbf{e}}_{i} \cdot (A^{j}\hat{\mathbf{e}}_{j}) = A^{j}\delta_{ij} = A^{i}.
+		\end{equation}
+	\end{exercise}
+
+	Another example here: we know that the Euclidean line element
+	\begin{equation}
+	  \dd \ell ^{2} = \dd x^{2} + \dd y^{2} + \dd z^{2}.
+	\end{equation}
+
+	\begin{example}
+		Show that:
+		\begin{equation}
+		  \dd \ell^{2} = \delta_{ij} \dd x^{i} \dd x^{j}.
+		\end{equation}
+
+		\vspace{1\baselineskip}
+		\textbf{Solution.} We have:
+		\begin{equation}
+		  \begin{aligned}
+		  \dd \ell^{2} &= \dd x^{2} + \dd y^{2} + \dd z^{2} \\
+		  &= (\dd x^{1})^{2} + (\dd x^{2})^{2} + (\dd x^{3})^{2} \\
+		  &= \sum_{i=1}^{3} (\dd x^{i})^{2} = \sum_{i=1}^{3} \dd x^{i} \dd x^{i} \\
+		  &= \sum_{i=1}^{3} \sum_{j=1}^{3} \delta_{ij} \dd x^{i} \dd x^{j}.
+		  \end{aligned}
+		\end{equation}
+
+		Drop the summation and we get the result.
+	\end{example}
+
+	An extension of this example is this: Suppose
+	\begin{equation}
+	  \dd s^{2} = g_{\mu \nu} (x) \dd x^{\mu} \dd x^{\nu},
+	\end{equation}
+
+	solving for $g$ gives you the function for gravity, which is the definition for "geometry of space". Also when we define
+	\begin{equation}
+	  \dd s^{2} \equiv \left( 1-\frac{2M}{r} \right) c\,\dd t^{2} + \left( 1-\frac{2M}{r} \right)^{-1}\,\dd r^{2} + r^{2}\sin ^{2}\theta \,\dd\Omega^{2},
+	\end{equation}
+
+	we can determine the event horizon of a black hole because when $r=2M$, the second differential gets to infinity.
+
+	\vspace{1\baselineskip}
+	We now define the \textbf{Cross product}. 
+	\begin{definition}
+		Multiply two vectors and get a vector through $\mathbf{A} \times \mathbf{B}$. We have:
+		\begin{equation}
+		  \mathbf{A} \times \mathbf{B} = AB\sin \theta \hat{\mathbf{n}},
+		\end{equation}
+
+		where the direction of $\hat{\mathbf{n}}$ is defined by the right hand rule. Note that this is anti-symmetric product (thus evidently not associative), because by the right hand rule,
+		\begin{equation}
+		  \mathbf{A} \times \mathbf{B} = -\mathbf{B} \times \mathbf{A}.
+		\end{equation}
+	\end{definition}
+
+	Now we need to write down the cross product of the basis vectors. We have:
+	\begin{equation}
+	  \hat{\mathbf{e}}_{i} \times \hat{\mathbf{e}}_{j} = \epsilon_{ijk} \hat{\mathbf{e}}_{k}.
+	\end{equation}
+
+	The $\epsilon$ is defined as the Levi-Civita symbol, where
+	\begin{equation}
+	  \epsilon_{ijk} = \begin{cases} 1, \quad \text{if} \; \{i,j,k\} \; \text{is an even permutation of} \; \{1,2,3\}, \\ 1, \quad \text{if} \; \{i,j,k\} \; \text{is an odd permutation of} \; \{1,2,3\}, \\ 0, \quad \text{otherwise.}  \end{cases}
+	\end{equation}
+
+	Note that $k$ is a free variable. The exercise now is to expand the vector multiplication of the base vectors.
+	\begin{exercise}
+		The first one is
+		\begin{equation}
+		  \hat{\mathbf{e}}_1 \times \hat{\mathbf{e}}_2 = \epsilon_{121}\hat{\mathbf{e}}_1 + \epsilon_{122}\hat{\mathbf{e}}_2 + \epsilon_{123}\hat{\mathbf{e}}_3 = \epsilon_{123} \hat{\mathbf{e}}_3 = \hat{\mathbf{e}}_3,
+		\end{equation}
+
+		The second one is:
+		\begin{equation}
+		  \hat{\mathbf{e}}_2 \times \hat{\mathbf{e}}_3 = \epsilon_{231}\hat{\mathbf{e}}_1 + \epsilon_{232}\hat{\mathbf{e}}_2 + \epsilon_{233}\hat{\mathbf{e}}_3 = \epsilon_{231}\hat{\mathbf{e}}_1 = \hat{\mathbf{e}}_1,
+		\end{equation}
+
+		And the last one is:
+		\begin{equation}
+		  \hat{\mathbf{e}}_1 \times \hat{\mathbf{e}}_3 = \epsilon_{132} \hat{\mathbf{e}}_2 = -\hat{\mathbf{e}}_2.
+		\end{equation}
+	\end{exercise}
+
+	Now consider two arbitrary vectors $\mathbf{A}$ and $\mathbf{B}$. We have:
+	\begin{equation}
+	  \begin{aligned}
+	  \mathbf{A} \times \mathbf{B} &= (A^{i}\hat{\mathbf{e}}_{i}) \times (B^{i}\hat{\mathbf{e}}_{j}) \\
+	  =& A^{i}B^{j}(\hat{\mathbf{e}}_{i} \times \hat{\mathbf{e}}_{j}) = A^{i}b^{j}(\epsilon_{ijk}\hat{\mathbf{e}}_{k}) \\
+	  =& \epsilon_{ijk} A^{i}b^{j}\hat{\mathbf{e}}_{k} \\
+	  =& \epsilon_{123}A^{1}B^{2}\hat{\mathbf{e}}_3 + \epsilon_{132}A^{1}B^{3}e^{2} + \epsilon_{213}A^{2}B^{1}\hat{\mathbf{e}}_3 \\
+	  &+ \epsilon_{231}A^{2}B^{3}\hat{\mathbf{e}}_1 + \epsilon_{312}A^{3}B^{1}\hat{\mathbf{e}}_2 + \epsilon_{321}A^{3}B^{2}\hat{\mathbf{e}}_1 \\
+	  =& (A^{2}B^{3}-A^{3}B^{2})\hat{\mathbf{e}}_1 + (A^{3}B^{1}-A^{1}B^{3})\hat{\mathbf{e}}_2 + (A^{1}b^{2}-A^{2}B^{1})\hat{\mathbf{e}}_3.
+	  \end{aligned}
+	\end{equation}
+
+	This is cleaner than the traditional determinant format because it is reproducible in higher dimensions. Note though, that only the Levi-Civita symbol can be defined, and in four dimensions or more, we cannot define the cross product comfortably because there is one more dimension of ambiguity. Now we have an example.
+	\begin{example}
+		Show that the identity holds:
+		\begin{equation}
+		  \epsilon_{ijk}\epsilon_{kmn} = \delta_{im}\delta_{jn} - \delta_{in}\delta_{jm}.
+		\end{equation}
+
+		We know that for this the single free variable is $k$.
+	\end{example}
+
+	Also: Prove the identity 
+	\begin{equation}
+	  \mathbf{A} \times (\mathbf{B} \times \mathbf{C}) = (\mathbf{A} \cdot \mathbf{C})\mathbf{B} - (\mathbf{A} \cdot \mathbf{B})\mathbf{C}.
+	\end{equation}
+
+\end{document}
+
+\end{document}
