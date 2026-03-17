@@ -1,0 +1,798 @@
+% \iffalse meta-comment
+%
+% subfiles - class and package for multi-file projects in LaTeX
+% Copyright 2002, 2012 Federico Garcia (feg8@pitt.edu, fedegarcia@hotmail.com)
+% Copyright 2018-2020 Gernot Salzer (salzer@logic.at)
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+% 
+% The Current Maintainer of this work is Gernot Salzer.
+%
+% This work consists of the files subfiles.dtx and subfiles.ins
+% and the derived files subfiles.cls, subfiles.sty and subfiles.pdf
+%
+% -------------------------------------------
+%
+%<*driver>
+% \fi
+\ProvidesFile{subfiles.dtx}[2020/11/14 v2.2 Multi-file projects]
+% \iffalse
+\documentclass{ltxdoc}
+\GetFileInfo{subfiles.dtx}
+\title{A Document Class and a Package\\for Handling Multi-File Projects}
+\date{2020/11/14 v2.2}
+\author{Federico Garcia, Gernot Salzer}
+\usepackage{hyperref}
+\begin{document}
+\maketitle
+ \DocInput{\filename}
+\end{document}
+%</driver>
+% \fi
+% \begin{abstract}
+%   The |subfiles| package allows authors to split a document into one main file and several subsidiary files (subfiles) akin to the |\input| command, with the added benefit of making the subfiles compilable on their own.
+%   This is achieved by reusing the preamble of the main file also for the subfiles.
+% \end{abstract}
+% \tableofcontents
+% \section{Introduction}
+% The \LaTeX\ commands |\include| and |\input| allow the user to split the \TeX\ source of a document into several input files.
+% This is useful when creating documents with many chapters, but also for handling large tables, figures and code samples, which require a considerable amount of trial-and-errors.
+%
+% In this process the rest of the document is of little use, and can even interfere.
+% For example, error messages may indicate not only the wrong line number, but may point to the wrong file.
+% Frequently, one ends up wanting to work only on the new file:
+% 
+% \begin{itemize}
+% \item Create a new file, and copy-paste the preamble of the main file into it.
+% \item Work on this file, typeset it \emph{alone} as many times as necessary.
+% \item Finally, when the result is satisfactory, delete the preamble from the file (alongside with |\end{document}|!), and |\include| or |\input| it from the main file.
+% \end{itemize}
+% 
+% It is desirable to reduce these three steps to the interesting, middle one.
+% Each new, subordinate file (henceforth `subfile') should behave both as a self-sufficient \LaTeX\ document and as part of the whole project, depending on whether it is \LaTeX ed individually or |\included|/|\input| from the main document.
+% This is what the class |subfiles.cls| and the package |subfiles.sty| are intended for. 
+% 
+% \section{Basic usage}
+%
+% \DescribeMacro{subfiles.sty}
+% The main file, i.e., the file with the preamble to be shared with the subfiles, has to load the package |subfiles|:
+% \begin{center}
+%   \begin{tabular}{l}
+%     |\documentclass[...]{...}|\\
+%     |\usepackage{subfiles}|\\
+%     |\begin{document}|
+%   \end{tabular}
+% \end{center}
+% \DescribeMacro{\subfile}
+% Subordinate files (subfiles) are loaded from the main file or from other subfiles with the command
+% \begin{center}
+%   |\subfile{|\meta{subfile\_name}|}|
+% \end{center}
+% \DescribeMacro{subfiles.cls}
+% The subfiles have to start with the line
+% \begin{center}
+%   |\documentclass[|\meta{main\_file\_name}|]{subfiles}|
+% \end{center}
+% which loads the class |subfiles|.
+% Its only `option', which is actually mandatory, gives the name of the main file.
+% This name follows \TeX\ conventions: |.tex| is the default extension, the path has to be provided if the main file is in a different directory, and directories in the path have to be separated by |/| (not |\|).
+% Thus, we have the following structure.
+% \begin{center}\small
+%   \begin{tabular}[t]{l}
+%     \multicolumn{1}{c}{main file} \\
+%     \hline
+%     |\documentclass[...]{...}| \\
+%     \meta{shared preamble} \\
+%     |\usepackage{subfiles}| \\
+%     |\begin{document}| \\
+%     \dots \\
+%     |\subfile{|\meta{subfile\_name}|}| \\
+%     \dots \\
+%     |\end{document}| \\
+%     \hline 
+%   \end{tabular}
+%   \hfill  
+%   \begin{tabular}[t]{l}
+%     \multicolumn{1}{c}{subfile} \\
+%     \hline
+%     |\documentclass[|\meta{main\_file\_name}|]{subfiles}| \\
+%     |\begin{document}| \\
+%     \dots \\
+%     |\end{document}| \\
+%     \hline
+%   \end{tabular}
+% \end{center}
+% Now there are two possibilities.
+% \begin{itemize}
+% \item If \LaTeX\ is run on the subfile, the line |\documentclass[..]{subfiles}| is replaced by the preamble of the main file (including its |\documentclass| command).
+%   The rest of the subfile is processed normally.
+% \item If \LaTeX\ is run on the main file, the subfile is loaded like with an |\input| command, except that the preamble of the subfile up to  |\begin{document}| as well as |\end{document}| and the lines following it are ignored.
+% \end{itemize}
+%
+% \section{Advanced usage}
+%
+% \subsection{Including files instead of inputting them}
+%
+% \DescribeMacro{\subfileinclude}
+% In plain \LaTeX, you can use either |\input| or |\include| to load a file.
+% In most cases the first is appropriate, but sometimes there are reasons to prefer the latter.
+% Internally, the |\subfile| command uses |\input|.
+% For those cases where you need |\include|, the package provides the command  
+% \begin{center}
+%   |\subfileinclude{|\meta{subfile\_name}|}|
+% \end{center}
+%
+% \subsection{Fixing pathes}
+%
+% \DescribeMacro{\subfix}
+% Whenever an error message of \LaTeX\ or an external program indicates that a file cannot be found, the reason may be that the missing file has to be addressed by varying pathes, depending on which file is typeset.
+% In such a case, it may help to apply the command |\subfix| to the file or path names.
+% Examples:
+% \begin{center}
+%   \begin{tabular}{ll}
+%       package & command when used with |subfiles| \\
+%       \hline
+%       |biblatex| & |\addbibresource{\subfix{|\meta{file}|}}| \\
+%       |bibunits| & |\putbib[\subfix{|\meta{file1}|},\subfix{|\meta{file2}|},|\dots|]|\\
+%                  & |\defaultbibliography{\subfix{|\meta{file1}|},|\dots|}|
+%     \end{tabular}
+%   \end{center}
+% \DescribeMacro{\bibliography}
+% \DescribeMacro{\graphicspath}
+% Some commands already apply the fix on the fly.
+% At the moment these are the standard \LaTeX\ command |\bibliography| and |\graphicspath| from the |graphics|/|graphicx| package.
+%
+% \subsection{Conditional execution of commands}
+%
+% \DescribeMacro{\ifSubfilesClassLoaded}
+% The command |\ifSubfilesClassLoaded| is useful to execute commands conditionally, depending on whether the main file is typeset or a subfile.
+% \begin{center}
+%   \begin{tabular}{l}
+%     |\ifSubfilesClassLoaded{% then branch|\\
+%       \quad \dots\ commands executed when the subfile is typeset \dots\\
+%     |}{% else branch|\\
+%       \quad \dots\ commands executed when the main file is typeset \dots\\
+%     |}|
+%   \end{tabular} 
+% \end{center}
+% As an example, this can be used to add the bibliography to the main document or to the subdocument, whichever is typeset:
+% \begin{center}\small
+%   \begin{tabular}[t]{l}
+%     \multicolumn{1}{c}{main file} \\
+%     \hline
+%     |\documentclass[...]{...}| \\
+%     |\usepackage{subfiles}|\\
+%     |\bibliographystyle{alpha}|\\ 
+%     |\begin{document}| \\
+%       \dots \\
+%     |\subfile{|\meta{subfile\_name}|}| \\
+%       \dots \\
+%     |\bibliography{bibfile}|\\
+%     |\end{document}| \\
+%     \hline 
+%   \end{tabular}
+%   \hfill  
+%   \begin{tabular}[t]{l}
+%     \multicolumn{1}{c}{subfile} \\
+%     \hline
+%     |\documentclass[|\meta{main\_file\_name}|]{subfiles}| \\
+%     |\begin{document}| \\
+%     \dots \\
+%     |\ifSubfilesClassLoaded{%|\\
+%     \quad|\bibliography{bibfile}%|\\
+%     |}{}|\\
+%     |\end{document}| \\
+%     \hline
+%   \end{tabular}
+% \end{center}
+%
+% \subsection{Unusual locations for placing definitions and text}
+%
+% Starting with version 2.0, the |subfiles| package treats sub-preambles and text after |\end{document}| as one would expect:
+% The preamble of subfiles is skipped when loaded with |\subfile|, and everything after |\end{document}| is ignored.
+% In most cases this is what you want. 
+%
+% \DescribeMacro{[v1]}
+% For reasons of compatibility, the option |v1| restores the behaviour of previous versions.
+% \begin{center}
+%   |\usepackage[v1]{subfiles}|
+% \end{center}
+% This will have three effects.
+%
+% \emph{Code after the end of the main document} is added to the preamble of the subfiles, but is ignored when typesetting the main file.
+% Here, one can add commands that are to be processed as part of the preamble when the subfiles are typeset on their one.
+% But this also means that any syntax error after |\end{document}| will ruin the \LaTeX ing of the subfile(s).
+%
+% \emph{Code in the preamble of a subfile} is processed as part of the text when typesetting the main file, but as part of the preamble when typesetting the subfile.
+% This means that with the option |v1|, the preamble of a subfile can only contain stuff that is acceptable for both, the preamble and the text area.
+% One should also keep in mind that each subfile is input within a group, so definitions made here may not work outside.
+%
+% \emph{Code after \texttt{\textbackslash end\{document\}} in a subfile} is treated like the code preceding it when the subfile is loaded from the main file, but is ignored when typesetting the subfile.
+% The code after |\end{document}| behaves as if following the |\subfile| command in the main file, except that it is still part of the group enclosing the subfile.
+% As a consequence, empty lines at the end of the subfile lead to a new paragraph in the main document, even if the |\subfile| command is immediately followed by text.
+%
+% \section{Use cases}
+%
+% \subsection{Hierarchy of directories}
+%
+% Sometimes it is desirable to put a subfile together with its images and supplementary files into its own directory.
+% The difficulty now is that these additional files have to be addressed by different pathes depending on whether the main file or the subfile is typeset.
+% As of version 1.3, the |subfiles| package handles this problem by using the |import| package.
+%
+% As an example, consider the following hierarchy of files:
+% \begin{center}\ttfamily
+%   \begin{tabular}{l}
+%     main.tex\\
+%     mypreamble.tex\\
+%     dir1/subfile1.tex\\
+%     dir1/image1.jpg\\
+%     dir1/text1.tex\\
+%     dir1/dir2/subfile2.tex\\
+%     dir1/dir2/image2.jpg\\
+%     dir1/dir2/text2.tex
+%   \end{tabular}
+% \end{center}
+% where |main|, |subfile1|, and |subfile2| have the following contents:
+% \begin{center}
+% \begin{tabular}[t]{l}
+%   \multicolumn{1}{c}{|main.tex|} \\
+%   \hline
+%   |\documentclass{article}| \\
+%   |\input{mypreamble}| \\  
+%   |\usepackage{graphicx}| \\
+%   |\usepackage{subfiles}| \\
+%   |\begin{document}| \\
+%   |\subfile{dir1/subfile1}|\\
+%   |\end{document}|\\
+%   \hline
+% \end{tabular}%
+% \hfill
+% \begin{tabular}[t]{l}
+%   \multicolumn{1}{c}{|subfile1.tex|} \\
+%   \hline
+%   |\documentclass[../main]{subfiles}| \\
+%   |\begin{document}| \\
+%   |\input{text1}|\\ 
+%   |\includegraphics{image1.jpg}|\\ 
+%   |\subfile{dir2/subfile2}| \\  
+%   |\end{document}| \\
+%   \hline
+% \end{tabular}\\[2ex]
+% \begin{tabular}[t]{l}
+%   \multicolumn{1}{c}{|subfile2.tex|} \\
+%   \hline
+%   |\documentclass[../../main]{subfiles}| \\
+%   |\begin{document}| \\
+%   |\input{text2}|\\ 
+%   |\includegraphics{image2.jpg}|\\ 
+%   |\end{document}| \\
+%   \hline
+% \end{tabular}
+% \end{center}
+% Then each of the three files can be typeset individually in its respective directory, where \LaTeX\ is able to locate all included text files and images.
+%
+% \subsection{Cross-referencing between subfiles}
+% When working with multiple subfiles under a main file, say |main.tex|, one may want to refer in subfile |A.tex| to labels in subfile |B.tex|. To make this work, load the package |xr| in the preamble of the main file and add an |\externaldocument| command after loading the |subfiles| package:
+% \begin{center}
+%   \begin{tabular}{l}
+%     |\usepackage{xr}| \\
+%     |\usepackage{subfiles}| \\
+%     |\externaldocument[M-]{\subfix{main}}|  
+%   \end{tabular}
+% \end{center}
+% In the |\externaldocument| command, |main| is the name of the main document.
+% Moreover, |M-| is an arbitrary sequence of characters that is added as prefix to the labels.
+% The |\subfix| command is only needed if the subfiles are not in the same directory as the main file, but it doesn't hurt if you add it in any case.
+%
+% To cross-reference between documents, add labels as usual.
+% Suppose you have |\label{mylabel}| in any of the files.
+% Then you can use |\ref{M-mylabel}| and  |\pageref{M-mylabel}| to obtain the (page) number that the label refers to in the main document.
+%
+% Note that you first have to compile |main.tex|.
+% This generates |main.aux|, which then can be loaded by the subfiles to provide the information for the labels prefixed with |M-|.
+%
+% \subsection{Avoiding extra spaces}
+%
+% Sometimes you may want to load the contents of a subfile without white space separating it from the contents of the main file.
+% In this respect, |\subfile| behaves similar to |\input|.
+% Any space or newline before and after the |\subfile| command will appear in the typeset document, as will any white space between the last character of the subfile and |\end{document}|.
+% Therefore, to load the contents of a subfile without intervening spaces, you have either to add comment signs:
+% \begin{center}
+%   \begin{tabular}[t]{l}
+%       \multicolumn{1}{c}{|main.tex|}\\
+%       \hline
+%       \dots\\
+%       |text before%|\\
+%       |\subfile{sub.tex}%|\\
+%       |text after|\\
+%       \hline
+%   \end{tabular}
+%   \qquad
+%   \begin{tabular}[t]{l}
+%       \multicolumn{1}{c}{|sub.tex|}\\
+%       \hline
+%       |\documentclass[main.tex]{subfiles}|\\
+%       |\begin{document}|\\
+%       |contents of subfile%|\\
+%       |\end{document}|\\
+%       \hline
+%   \end{tabular}
+% \end{center}
+% or to put everything on the same line:
+% \begin{center}
+%   |text before\subfile{sub.tex}text after|\\
+%   |contents of subfile\end{document}|
+% \end{center}
+%
+% \section{Troubleshooting}
+%
+% Here are some hints that solve most problems.
+%
+% \begin{enumerate}
+% \item
+%   Make sure to use the most recent version of the |subfiles| package, available from CTAN\footnote{\url{https://ctan.org/pkg/subfiles}} and Github\footnote{\url{https://github.com/gsalzer/subfiles}}.
+% \item
+%   Make sure that |\usepackage{subfiles}| appears near the end of the main preamble. If you need the package |standalone|, then it has to be loaded before |subfiles|.
+% \item
+%   If some external program that cooperates with \TeX, like |bibtex| or |biber|, complains about not being able to find a file, locate the name of the file in the \LaTeX\ source and replace \meta{filename} by |\subfix{|\meta{filename}|}|.
+% \item
+%   If nothing of the above helps, ask the nice people on tex.stackexchange\footnote{\url{https://tex.stackexchange.com/}} or file an issue in the bug tracker of the Github repository\footnote{\url{https://github.com/gsalzer/subfiles/issues}}.
+% \end{enumerate}
+%
+% 
+% \section{Dependencies}
+%
+% The |import| package by Donald Arsenau is needed to load subfiles from different directories.
+% When the |standalone| package is used, the |subfiles| package requires the |xpatch| package by Enrico Gregorio to patch the command |\includestandalone|. 
+% Both packages are part of the standard \TeX\ distributions.
+%
+%
+% \section{Version history}
+%
+% \begin{enumerate}
+% \item[v1.1:]
+%   Initial version by Federico Garcia. (Subsequent versions by Gernot Salzer.)
+% \item[v1.2:] 
+%   \begin{itemize}
+%   \item Incompatibility with classes and packages removed that modify the |\document| command, like the class |revtex4|.
+%   \end{itemize}
+% \item[v1.3:]
+%   \begin{itemize}
+%   \item Use of |import| package to handle directory hierarchies.
+%   \item |\ignorespaces| added to avoid spurious spaces.
+%   \item Incompatibility with commands removed that expect |\document| to be equal to |\@onlypreamble| after the preamble. Thanks to Eric Domenjoud for analysing the problem.
+%   \end{itemize}
+% \item[v1.4:]
+%   \begin{itemize}
+%   \item Incompatibility with |memoir| class and |comment| package removed.
+%   \item Bug `|\unskip| cannot be used in vertical mode` fixed.
+%   \end{itemize}
+% \item[v1.5:]
+%   \begin{itemize}
+%   \item Command |\subfileinclude| added.
+%   \item Basic support for |bibtex| related bibliographies in subfiles added.
+%      Seems to suffice also for sub-bibliographies with the package |chapterbib|.
+%   \item Support for sub-bibliographies with package |bibunits| added.
+%   \end{itemize}
+% \item[v1.6:]
+%   \begin{itemize}
+%   \item Support for sub-bibliographies with package |bibunits| dropped, in favor of |\subfix|.
+%   \item Command |\subfix| added.
+%   \item Incompatibility with |standalone| class removed.
+%   \item The options of the main class are now also processed when typesetting a subfile; before they were ignored. Thanks to J\'an Kl'uka for analysing the problem.
+%   \end{itemize}
+% \item[v2.0:]
+%   \begin{itemize}
+%   \item Incompatibility with \LaTeX\ Oct.~2020 removed.
+%     Thanks to Ulrike \mbox{Fischer} from the \LaTeX3 team for the timely warning.
+%   \item By default, text after |\end{document}| as well as the preamble of subfiles, when loaded with |\subfile|, are ignored now.
+%     The old behaviour is available via the new package option |v1|.
+%   \item Command |\ifSubfilesClassLoaded| added and documentation regarding the use of the |\bibliography| command corrected.
+%     Thanks to Github user |alan-isaac| for reporting the issue.
+%   \item Subfiles now can have the same name as the main file.
+%     Thanks to Github user |June-6th| for reporting the issue.
+%   \item Problem with the search path for images resolved.
+%     Thanks to Github user |maxnick| for reporting the issue.
+%   \end{itemize}
+% \item[v2.1]
+%   \begin{itemize}
+%   \item Bugfix: In some situations, the hooks of |\begin{document}| and |\end{document}| were triggered when loading a subfile.
+%     This occurred in particular with packages for handling CJK languages.
+%     Thanks to Github user |yuishin-kikuchi| for reporting the issue.
+%   \item Section about cross-referencing added.
+%     Thanks to Github user |ndvanforeest| for the input.
+%   \end{itemize}
+% \item[v2.2]
+%   \begin{itemize}
+%   \item Bugfix: The bugfix of v2.1 introduced an incompatibility with |tabular| environments in subfiles. Thanks to |yuishin-kikuchi| and |nvmnghia| on Github for reporting the issue. Kudos to |Phelype Oleinik| on tex.stackexchange.com for explaining the intricacies of the |tabular| environment and its interaction with the |\end| command.
+%   \end{itemize}
+% \end{enumerate}
+%
+%\section{The Implementation}
+%\subsection{The class}
+%
+% \iffalse
+%<*class>
+% \fi
+%
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{subfiles}[2020/11/14 v2.2 Multi-file projects (class)]
+\DeclareOption*{%
+  \typeout{Preamble taken from file `\CurrentOption'}%
+  \let\preamble@file\CurrentOption
+}
+\ProcessOptions
+%    \end{macrocode}
+%
+% After processing the option of the |subfiles| class, we reset |\@classoptionslist| such that the options in the main file will be processed.
+%
+%    \begin{macrocode}
+\let\@classoptionslist\relax
+%    \end{macrocode}
+%
+% To handle subfiles in separate directories, we use the |import| package.
+% We load it now, since it resets the macro |\import@path|.
+%    \begin{macrocode}
+\RequirePackage{import}
+%    \end{macrocode}
+% 
+% We redefine |\documentclass| to load the class of the main document.
+% 
+%    \begin{macrocode}
+\let\subfiles@documentclass\documentclass
+\def\documentclass{%
+  \let\documentclass\subfiles@documentclass
+  \LoadClass
+}
+%    \end{macrocode}
+%
+% In earlier versions, we used |\subimport| to load the preamble of the main file, which has the unwanted effect of undoing changes to the graphics path.
+% Therefore we use |\input| and initialize |\import@path| and |\input@path| to the path of the main file.
+% We use the internal \LaTeX\ macro |\filename@parse| to obtain this path.
+%
+%    \begin{macrocode}
+\filename@parse{\preamble@file}
+\edef\import@path{\filename@area}
+\edef\input@path{{\filename@area}}
+\input{\preamble@file}
+%    \end{macrocode}
+%
+% After loading the preamble of the main file, we reset |\import@path|.
+% Since the preamble may have changed the catcode of the |@| sign, we make it (again) a letter. Better safe than sorry.
+%
+%    \begin{macrocode}
+{\makeatletter
+  \gdef\import@path{}
+}
+%    \end{macrocode}
+%
+% \iffalse
+%</class>      
+% \fi
+%
+%
+% \subsection{The package}
+%
+% \iffalse
+%<*package>
+% \fi
+%
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{subfiles}[2020/11/14 v2.2 Multi-file projects (package)]
+%    \end{macrocode}
+% \subsubsection*{Auxiliary commands}
+%
+% When redefining the |\end| command, we have to have to keep it expandable to a certain depth.
+% Therefore we need an expandable way to compare strings.
+% We borrow the function from LaTeX's |expl3| part.
+%
+%    \begin{macrocode}
+\ExplSyntaxOn
+\cs_new_eq:NN \subfiles@StrIfEqTF \str_if_eq:nnTF
+\ExplSyntaxOff
+%    \end{macrocode}
+%
+% The macro |\subfiles@renewBeginDocument{|\meta{code}|}| redefines |\begin| such that the next |\begin{document}| executes \meta{code} (and then restores the original definition of |\begin|).
+%
+%    \begin{macrocode}
+\def\subfiles@renewBeginDocument#1{%
+  \let\subfiles@begin\begin
+  \def\begin##1{%
+    \subfiles@StrIfEqTF{##1}{document}{%
+      \let\begin\subfiles@begin
+      #1%
+    }{%
+      \csname subfiles@begin\endcsname{##1}%
+    }%
+  }%
+}
+%    \end{macrocode}
+%
+% The macro |\subfiles@renewEndDocument{|\meta{code}|}| redefines |\end| such that the next |\end{document}| executes \meta{code} (and then restores the original definition of |\end|).
+% This macro is more complex then the previous one, as we have to ensure that
+% |\expandafter\expandafter\expandafter\relax\end{env}| expands to |\relax\endenv|.
+% This is necessary for |tabular|s to work correctly.
+%
+%    \begin{macrocode}
+\def\subfiles@saveEndTo#1{\expandafter\let\expandafter#1\csname end \endcsname}
+\def\subfiles@restoreEndFrom{\expandafter\let\csname end \endcsname}
+\def\subfiles@renewEndDocument#1{%
+  \ifcsname subfiles@end\endcsname
+  \else
+    \subfiles@saveEndTo\subfiles@end
+  \fi
+  \expandafter\def\csname end \endcsname##1{%
+    \romannumeral
+    \subfiles@StrIfEqTF{##1}{document}{%
+      \z@
+      \subfiles@restoreEndFrom\subfiles@end
+      #1%
+    }{%
+      \expandafter\expandafter\expandafter\z@\subfiles@end{##1}%
+    }%
+  }%
+}
+%    \end{macrocode}
+%
+% \subsubsection*{Handling the main document}
+%
+% When the main document is loaded from a subfile, the preamble is read, but the document itself is skipped.
+% The end of the preamble is marked by |\begin{document}|.
+% In version 1.x of the |subfiles| package, everything up to (and including) |\end{document}| is skipped, but the lines following it are treated again as part of the preamble.
+% The macro |\subfiles@handleMainDocumentVi| redefines |\begin{document}| accordingly.
+% 
+%    \begin{macrocode}
+\def\subfiles@handleMainDocumentVi{%
+  \long\def\subfiles@skipToEndDocument##1\end##2{%
+    \subfiles@StrIfEqTF{##2}{document}{\ignorespaces}{\subfiles@skipToEndDocument}%
+  }%
+  \subfiles@renewBeginDocument{%
+    \subfiles@skipToEndDocument
+  }%
+}
+%    \end{macrocode}
+%
+% In version 2.x of the |subfiles| package, everything following |\begin{document}| is ignored.
+% The macro |\subfiles@handleMainDocumentVii| redefines this command accordingly.
+% 
+%    \begin{macrocode}
+\def\subfiles@handleMainDocumentVii{%
+  \subfiles@renewBeginDocument{%
+    \endinput
+    \ignorespaces
+  }%
+}
+%    \end{macrocode}
+%
+% \subsubsection*{Handling subfiles}
+%
+% When a subfile is loaded, the preamble and |\end{document}| have to be ignored.
+% More precisely, in older versions (v1.x), the following happens:
+% \begin{itemize}
+% \item |\documentclass[...]{subfiles}| is ignored.
+% \item The contents of the preamble becomes part of the text.
+% \item |\begin{document}| is ignored.
+% \item |\end{document}| is ignored.
+% \item Any lines after |\end{document}| are also part of the text.
+% \end{itemize}
+%
+%    \begin{macrocode}
+\def\subfiles@handleSubDocumentVi{%
+  \let\subfiles@documentclass\documentclass
+  \def\documentclass{%
+    \@ifnextchar[\subfiles@documentclass@{\subfiles@documentclass@[]}%
+  }%
+  \def\subfiles@documentclass@[##1]##2{%
+    \let\documentclass\subfiles@documentclass
+    \ignorespaces
+  }%
+  \subfiles@renewBeginDocument{%
+    \subfiles@renewEndDocument\ignorespaces
+    \ignorespaces
+  }%
+}
+%    \end{macrocode}
+% In newer versions (v2.x), the following happens:
+% \begin{itemize}
+% \item The preamble, up to |\begin{document}|, is ignored.
+% \item |\end{document}| as well as any lines after it are ignored.
+% \end{itemize}
+%
+%    \begin{macrocode}
+\def\subfiles@handleSubDocumentVii{%
+  \let\subfiles@documentclass\documentclass
+  \long\def\documentclass##1\begin##2{%
+    \subfiles@StrIfEqTF{##2}{document}{%
+      \let\documentclass\subfiles@documentclass
+      \subfiles@renewEndDocument{%
+        \endinput
+        \ignorespaces
+      }%
+      \ignorespaces
+    }{\documentclass}
+  }%
+}
+%    \end{macrocode}
+%
+% \subsubsection*{Processing the package options}
+%
+% The package has currently only one option, |v1|, which affects the way how the text after |\end{document}| and in the preamble of subfiles is handled.
+% We initialize the macros for handling main and sub documents with the behavior of version 2.x.
+%    \begin{macrocode}
+\let\subfiles@handleMainDocument\subfiles@handleMainDocumentVii
+\let\subfiles@handleSubDocument\subfiles@handleSubDocumentVii
+%    \end{macrocode}
+% When option |v1| is present, the macros are set to the behavior of version 1.x.
+%    \begin{macrocode}
+\DeclareOption{v1}{%
+  \let\subfiles@handleMainDocument\subfiles@handleMainDocumentVi
+  \let\subfiles@handleSubDocument\subfiles@handleSubDocumentVi
+}
+\DeclareOption*{\PackageWarning{subfiles}{Option '\CurrentOption' ignored}}
+\ProcessOptions\relax
+%    \end{macrocode}
+%
+% \subsubsection*{Loading subfiles}
+%
+% To handle subfiles in separate directories, we use the |import| package.
+% If it has already been loaded, e.g.\ by the |subfiles| class, this line does nothing.
+%    \begin{macrocode}
+\RequirePackage{import}
+%    \end{macrocode}
+% 
+% The |\subimport| command requires path and filename as separate arguments, so we have to split qualified filenames into these two components.
+% The internal \LaTeX\ command |\filename@parse| almost fits the bill, except that it additionally splits the filename into basename and extension.
+% Unfortunately, concatenating basename and extension to recover the filename is not clean:
+% Under Unix/Linux, the filenames |base| and |base.| denote different entities, but after |\filename@parse| both have the same basename and an empty extension.
+% Therefore we redefine the command |\filename@simple| temporarily; it is responsible for this unwanted split.
+%  
+%    \begin{macrocode}
+\def\subfiles@split#1{%
+  \let\subfiles@filename@simple\filename@simple
+  \def\filename@simple##1.\\{\edef\filename@base{##1}}%
+  \filename@parse{#1}%
+  \let\filename@simple\subfiles@filename@simple
+}%
+%    \end{macrocode}
+%
+% E.g., after executing |\subfiles@split{../dir1/dir2/file.tex}| the macros |\filename@area| and |\filename@base| expand to |../dir1/dir2/| and |file.tex|, respectively.
+%
+% \DescribeMacro{\subfile}
+% The command |\subfile| specifies the command |\subimport| for |\input|ing the subfile, and then calls |\subfiles@subfile|.
+%
+%    \begin{macrocode}
+\newcommand\subfile{%
+  \let\subfiles@loadfile\subimport
+  \subfiles@subfile
+}
+%    \end{macrocode}
+%
+% \DescribeMacro{\subfileinclude}
+% The command |\subfileinclude| specifies the command |\subincludefrom| for |\include|ing the subfile, and then calls |\subfiles@subfile|.
+%
+%    \begin{macrocode}
+\newcommand\subfileinclude{%
+  \let\subfiles@loadfile\subincludefrom
+  \subfiles@subfile
+}
+%    \end{macrocode}
+%
+% The main functionality is implemented in |\subfiles@subfile|.
+% It sets up the handling of the sub-preamble, splits the filename and loads the subfile.
+%
+%    \begin{macrocode}
+\def\subfiles@subfile#1{%
+  \begingroup
+  \subfiles@handleSubDocument
+  \subfiles@split{#1}%
+  \subfiles@loadfile{\filename@area}{\filename@base}%
+  \endgroup
+}
+%    \end{macrocode}
+%
+% \subsubsection*{Fixing incompatibilities}
+%
+% \DescribeMacro{\subfix}
+% If some package provides a command that takes a filename as argument, then it has to be prefixed with the current |\import@path|.
+% This is what the |\subfix| command tries to do.
+% In order to succeed, the filename has to be expanded immediately, such that the current value of |\import@path| is used.
+%
+%    \begin{macrocode}
+\def\subfix#1{\import@path#1}
+%    \end{macrocode}
+%
+% For patching a list of file or path names, we define two auxiliary macros, one iterating over a comma-separated list of names and one processing a sequence of names enclosed in braces.
+%
+%    \begin{macrocode}
+\def\subfiles@fixfilelist#1{%
+  \def\subfiles@list{}%
+  \def\subfiles@sep{}%
+  \@for\subfiles@tmp:=#1\do{%
+    \edef\subfiles@list{\subfiles@list\subfiles@sep\subfix{\subfiles@tmp}}%
+    \def\subfiles@sep{,}%
+  }%
+}
+\def\subfiles@fixpathlist#1{%
+  \def\subfiles@list{}%
+  \@tfor\subfiles@tmp:=#1\do{%
+    \edef\subfiles@list{\subfiles@list{\subfix\subfiles@tmp}}%
+  }%
+}
+%    \end{macrocode}
+%
+% \DescribeMacro{\bibliography}
+% \DescribeMacro{\graphicspath}
+% We patch |\bibliography| and |\graphicspath| (from the |graphics|/|graphicx| package) such that users don't have to worry about adding |\subfix|.
+%
+%    \begin{macrocode}
+\let\subfiles@bibliography\bibliography
+\def\bibliography#1{%
+  \subfiles@fixfilelist{#1}%
+  \expandafter\subfiles@bibliography\expandafter{\subfiles@list}%
+}
+\@ifpackageloaded{graphics}{%
+  \let\subfiles@graphicspath\graphicspath
+  \def\graphicspath#1{%
+    \subfiles@fixpathlist{#1}%
+    \edef\subfiles@list{{\subfix{}}\subfiles@list}%
+    \expandafter\subfiles@graphicspath\expandafter{\subfiles@list}%
+  }%
+}{}
+%    \end{macrocode}
+%
+% \DescribeMacro{\includestandalone}
+% The command |\includestandalone| handles subfiles in its own way.
+% Therefore we modify it to use the original definition of |\end|.
+%
+%    \begin{macrocode}
+\@ifpackageloaded{standalone}{
+  \RequirePackage{xpatch}
+  \xpretocmd\includestandalone{%
+    \subfiles@saveEndTo\subfiles@end@
+    \ifcsname subfiles@end\endcsname
+      \subfiles@restoreEndFrom\subfiles@end
+    \fi
+  }{}{}
+  \xapptocmd\includestandalone{\subfiles@restoreEndFrom\subfiles@end@}{}{}
+}{}
+%    \end{macrocode}
+%
+% \subsubsection*{Do we typeset the main file or a subfile?}
+%
+% \DescribeMacro{\ifSubfilesClassLoaded}
+% To add code or text conditionally, depending on whether the main document or a subfile is typeset, we provide the command |\ifSubfilesClassLoaded|.
+%
+%    \begin{macrocode}
+\newcommand\ifSubfilesClassLoaded{%
+  \expandafter\ifx\csname ver@subfiles.cls\endcsname\relax
+    \expandafter\@secondoftwo
+  \else
+    \expandafter\@firstoftwo
+  \fi
+}
+%    \end{macrocode}
+%
+%
+% \subsubsection*{The end is near}
+%
+% The |subfiles| package is loaded near the end of the main preamble.
+% If it is loaded from a subfile, i.e., if |subfiles.cls| has been loaded, then we prepare for skipping the main document.
+%    \begin{macrocode}
+\ifSubfilesClassLoaded{%
+  \subfiles@handleMainDocument
+}{}
+%    \end{macrocode}
+%
+% \iffalse
+%</package>
+% \fi
